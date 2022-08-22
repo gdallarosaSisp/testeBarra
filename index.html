@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <title> Ler Barcode </title>
 </head>
 
@@ -17,28 +18,22 @@
 
     <script>
 
-        Quagga.init({
-            inputStream: {
-                name: "Live",
-                type: "LiveStream",
-                target: document.querySelector('#camera')    // Or '#yourElement' (optional)
-            },
-            decoder: {
-                readers: ["code_128_reader"]
-            }
-        }, function (err) {
-            if (err) {
-                alert(err);
-                return
-            }
-            alert("Initialization finished. Ready to start");
-            Quagga.start();
-        });
+    function onScanSuccess(decodedText, decodedResult) {
+    // handle the scanned code as you like, for example:
+    alert(`Code matched = ${decodedText}`, decodedResult);
+    }
 
-        Quagga.onDetected(function (data) {
-            alert(data.codeResult.code);
-            document.querySelector('#resultado').innerText = data.codeResult.code;
-        });
+    function onScanFailure(error) {
+    // handle scan failure, usually better to ignore and keep scanning.
+    // for example:
+    alert(`Code scan error = ${error}`);
+    }
+
+    let html5QrcodeScanner = new Html5QrcodeScanner(
+    "camera",
+    { fps: 10, qrbox: {width: 250, height: 250} },
+    /* verbose= */ false);
+    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 
     </script>
 
